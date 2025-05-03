@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vastra Darpana</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .background-container {
+            background: url('/static/img/banner.jpg') no-repeat center center / cover;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            width: 100%;
+            text-align: center;
+            padding: 20px;
+            background: rgba(235, 225, 113, 0.8);
+        }
+
+        header h1 {
+            font-size: 4.5em;
+            color: #472d02;
+        }
+
+        main {
+            width: 100%;
+            position: relative;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .section {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .banner {
+            background: rgba(230, 208, 102, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            width: 50%;
+            margin: auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .preview {
+            margin: auto;
+            border: 2px dashed #e9e282;
+            padding: 10px;
+            height: 200px;
+            width: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .result {
+            text-align: center;
+            font-size: 1rem;
+            margin-top: 10px;
+            color: #333;
+        }
+
+        /* Footer Navigation */
+        footer {
+            background: rgba(240, 228, 119, 0.9);
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            position: relative;
+        }
+
+        .nav-option {
+            text-align: center;
+            cursor: pointer;
+            width: 20%;
+        }
+
+        .nav-option img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 5px;
+            object-fit: cover;
+            border: 2px solid #745e06;
+        }
+
+        .nav-option p {
+            font-size: 3em;
+            color: #332902;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-container">
+        <header>
+            <h1>Vastra Darpana</h1>
+        </header>
+
+        <main id="content">
+            <!-- Home Section -->
+            <section id="home" class="section active">
+                <div class="banner">
+                    <h2 style="color: maroon; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Discover Timeless Elegance</h2><br><br>
+                    <h3>"A saree is more than a garment—it's a piece of <br>
+                         culture woven with love and tradition"</h3>
+                    <br><br><br>
+                </div>
+            </section>
+
+            <!-- Silk Section -->
+            <section id="silk" class="section">
+                <h2 style="color: maroon; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-size: 2rem;">Silk Collection</h2>
+                <br><br><br>
+                <input type="file" id="fileSilk" onchange="showImage('silkPreview', event)">
+                <button onclick="analyze('silk')">Analyze</button>
+                <div class="preview">
+                    <img id="silkPreviewImage" alt="Uploaded Image" />
+                    <div id="silkResult" class="result"></div>
+                </div>
+            </section>
+
+            <!-- Jari Section -->
+            <section id="jari" class="section">
+                <h2 style="color: maroon; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-size: 2rem;">Jari Collection</h2>
+                <br><br><br>
+                <input type="file" id="fileJari" onchange="showImage('jariPreview', event)">
+                <button onclick="analyze('jari')">Analyze</button>
+                <div class="preview">
+                    <img id="jariPreviewImage" alt="Uploaded Image" />
+                    <div id="jariResult" class="result"></div>
+                </div>
+            </section>
+
+            <!-- Cotton Section -->
+            <section id="cotton" class="section">
+                <h2 style="color: maroon; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-size: 2rem;">Cotton Collection</h2>
+                <br><br><br>
+                <input type="file" id="fileCotton" onchange="showImage('cottonPreview', event)">
+                <button onclick="analyze('cotton')">Analyze</button>
+                <div class="preview">
+                    <img id="cottonPreviewImage" alt="Uploaded Image" />
+                    <div id="cottonResult" class="result"></div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer Navigation -->
+        <footer>
+            <div class="nav-option" onclick="navigate('home')">
+                <img src="{{ url_for('static', filename='img/home.png') }}" alt="Home">
+                <p>Home</p>
+            </div>
+            <div class="nav-option" onclick="navigate('silk')">
+                <img src="{{ url_for('static', filename='img/silk.jpg') }}" alt="Silk">
+                <p>Silk</p>
+            </div>
+            <div class="nav-option" onclick="navigate('jari')">
+                <img src="{{ url_for('static', filename='img/jari.jpg') }}" alt="Jari">               
+                <p>Jari</p>
+            </div>
+            <div class="nav-option" onclick="navigate('cotton')">
+                <img src="{{ url_for('static', filename='img/cotton.jpg') }}" alt="Cotton">                
+                <p>Cotton</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Function to navigate between sections
+        function navigate(section) {
+            document.querySelectorAll('.section').forEach((sec) => sec.classList.remove('active'));
+            document.getElementById(section).classList.add('active');
+        }
+
+        // Function to show uploaded image
+        function showImage(previewId, event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const imgElement = document.getElementById(previewId + 'Image');
+                    imgElement.src = e.target.result; // Update the image source
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function analyze(section) {
+            const inputMap = {
+                silk: { inputId: 'fileSilk', resultId: 'silkResult', apiUrl: '/silk/predict' },
+                cotton: { inputId: 'fileCotton', resultId: 'cottonResult', apiUrl: '/cotton/predict' },
+                jari: { inputId: 'fileJari', resultId: 'jariResult', apiUrl: '/jari/predict' }
+            };
+
+            const config = inputMap[section];
+            if (!config) {
+                console.error(`No configuration found for section: ${section}`);
+                return;
+            }
+
+            const fileInput = document.getElementById(config.inputId);
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert("Please upload a file before analyzing.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch(config.apiUrl, {
+                method: 'POST',
+                body: formData
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    const resultDiv = document.getElementById(config.resultId);
+
+                    if (data.error) {
+                        resultDiv.innerHTML = `<p style="color: red;">Error: ${data.error}</p>`;
+                    } else {
+                        resultDiv.innerHTML = `
+                            <p style="color: green; font-weight: bold;">Prediction: ${data.prediction}</p>
+                            ${data.confidence ? `<p>Confidence: ${data.confidence}</p>` : ''}
+                        `;
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    document.getElementById(config.resultId).innerHTML = `<p style="color: red;">An error occurred. Please try again.</p>`;
+                });
+        }
+    </script>
+</body>
+</html>
